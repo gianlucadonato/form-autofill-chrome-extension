@@ -22,8 +22,9 @@ function createTemplate() {
     const type = input.getAttribute("type");
     const name = input.getAttribute("name");
     const value = input.value;
+    const checked = input.checked;
     if (type) {
-      attributes.push({ type, name, value });
+      attributes.push({ type, name, value, checked });
     }
   });
   console.log("attributes: ", attributes);

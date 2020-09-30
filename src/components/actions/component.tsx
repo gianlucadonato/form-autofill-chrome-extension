@@ -1,28 +1,38 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./actions.scss";
-import ChromeTabs from "../../chrome-tabs";
 import { ACTIONS } from "../../constants";
-
-async function sendCommand(action: string): Promise<Promise<void>> {
-  const activeTab = await ChromeTabs.queryActiveTab();
-  if (!activeTab) {
-    return Promise.reject(new Error("no active tab"));
-  }
-  console.log("activeTab", activeTab);
-  const tabs = new ChromeTabs(activeTab.id);
-
-  await tabs.sendMessage({ action });
-}
+import { sendContent } from "../../utils";
 
 export function Actions() {
+  const [enableAutofillSettings, setEnableAutofillSettings] = useState(false);
+
+  const onClickSettings = () => {
+    setEnableAutofillSettings(!enableAutofillSettings);
+    chrome.runtime.sendMessage({
+      enableAutofillSettings: !enableAutofillSettings,
+    });
+  };
+
+  useEffect(() => {
+    chrome.privacy.services.autofillAddressEnabled.get({}, details => {
+      setEnableAutofillSettings(details.value);
+    });
+  }, []);
+
   return (
     <div className="row">
       <div className="col-lg-12">
         <button
           className="btn btn-block btn-outline-dark"
-          onClick={() => sendCommand(ACTIONS.NEW_TEMPLATE)}
+          onClick={() => sendContent({ action: ACTIONS.NEW_TEMPLATE })}
         >
           Generate Template
+        </button>
+        <button
+          className="btn btn-block btn-outline-dark"
+          onClick={onClickSettings}
+        >
+          Enable Autofill: {`${enableAutofillSettings}`}
         </button>
       </div>
     </div>

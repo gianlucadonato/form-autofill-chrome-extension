@@ -44,6 +44,7 @@ module.exports = {
   },
   plugins: [
     new ExtensionReloader({
+      reloadPage: true,
       entry: {
         contentScript: "content",
         background: "background",

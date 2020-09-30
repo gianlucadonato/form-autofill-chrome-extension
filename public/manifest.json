@@ -18,6 +18,7 @@
     "tabs",
     "activeTab",
     "notifications",
+    "privacy",
     "http://*/",
     "https://*/"
   ],
